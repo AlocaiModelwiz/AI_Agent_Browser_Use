@@ -1,3 +1,18 @@
+import requests
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+ollama_endpoint = os.getenv("OLLAMA_ENDPOINT")
+response_ollama = requests.get(f"{ollama_endpoint}"+"/api/tags")
+
+if response_ollama.status_code == 200:
+    data = response_ollama.json()
+    model_names = [model["name"] for model in data.get("models", [])]
+else:
+    model_names = ["qwen2.5:7b", "qwen2.5:14b", "qwen2.5:32b", "qwen2.5-coder:14b", "qwen2.5-coder:32b", "llama2:7b",
+               "deepseek-r1:14b", "deepseek-r1:32b"]
+                        
 PROVIDER_DISPLAY_NAMES = {
     "openai": "OpenAI",
     "azure_openai": "Azure OpenAI",
@@ -13,14 +28,13 @@ PROVIDER_DISPLAY_NAMES = {
 
 # Predefined model names for common providers
 model_names = {
-    "anthropic": ["claude-3-5-sonnet-20241022", "claude-3-5-sonnet-20240620", "claude-3-opus-20240229"],
-    "openai": ["gpt-4o", "gpt-4", "gpt-3.5-turbo", "o3-mini"],
+    "anthropic": ["claude-opus-4-1-20250805", "claude-sonnet-4-20250514", "claude-opus-4-20250514"],
+    "openai": ["gpt-4o", "gpt-5", "o3-pro", "o3-mini", "gpt-4.1"],
     "deepseek": ["deepseek-chat", "deepseek-reasoner"],
     "google": ["gemini-2.0-flash", "gemini-2.0-flash-thinking-exp", "gemini-1.5-flash-latest",
                "gemini-1.5-flash-8b-latest", "gemini-2.0-flash-thinking-exp-01-21", "gemini-2.0-pro-exp-02-05",
                "gemini-2.5-pro-preview-03-25", "gemini-2.5-flash-preview-04-17"],
-    "ollama": ["qwen2.5:7b", "qwen2.5:14b", "qwen2.5:32b", "qwen2.5-coder:14b", "qwen2.5-coder:32b", "llama2:7b",
-               "deepseek-r1:14b", "deepseek-r1:32b"],
+    "ollama": model_names,
     "azure_openai": ["gpt-4o", "gpt-4", "gpt-3.5-turbo"],
     "mistral": ["pixtral-large-latest", "mistral-large-latest", "mistral-small-latest", "ministral-8b-latest"],
     "alibaba": ["qwen-plus", "qwen-max", "qwen-vl-max", "qwen-vl-plus", "qwen-turbo", "qwen-long"],
